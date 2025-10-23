@@ -81,7 +81,7 @@ deployment "dev" {
     db_password  = store.varset.database_config.db_password
     project_name = store.varset.common_tags.project_name
     owner        = store.varset.common_tags.owner
-    created_by   = store.varset.common_tags.created_by
+    createdBy    = store.varset.common_tags.createdBy
     cost_center  = store.varset.common_tags.cost_center
     name_prefix  = store.varset.common_tags.name_prefix
   }
@@ -112,7 +112,7 @@ deployment "stg" {
     db_password  = store.varset.database_config.db_password
     project_name = store.varset.common_tags.project_name
     owner        = store.varset.common_tags.owner
-    created_by   = store.varset.common_tags.created_by
+    createdBy    = store.varset.common_tags.createdBy
     cost_center  = store.varset.common_tags.cost_center
     name_prefix  = store.varset.common_tags.name_prefix
   }
@@ -143,7 +143,7 @@ deployment "prd" {
     db_password  = store.varset.database_config.db_password
     project_name = store.varset.common_tags.project_name
     owner        = store.varset.common_tags.owner
-    created_by   = store.varset.common_tags.created_by
+    createdBy    = store.varset.common_tags.createdBy
     cost_center  = store.varset.common_tags.cost_center
     name_prefix  = store.varset.common_tags.name_prefix
   }

@@ -100,7 +100,7 @@ variable "owner" {
   description = "Owner of the resources"
 }
 
-variable "created_by" {
+variable "createdBy" {
   type        = string
   description = "Creator of the resources"
 }
@@ -197,7 +197,7 @@ locals {
     Environment = var.environment
     Project     = var.project_name
     Owner       = var.owner
-    CreatedBy   = var.created_by
+    CreatedBy   = var.createdBy
     CostCenter  = var.cost_center
     ManagedBy   = "terraform-stacks"
     Stack       = "application-services"
