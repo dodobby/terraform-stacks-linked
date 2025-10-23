@@ -33,20 +33,38 @@ upstream_input "core_infrastructure" {
 }
 
 # -----------------------------------------------------------------------------
+# 자동 승인 정책 정의
+# -----------------------------------------------------------------------------
+deployment_auto_approve "dev_auto_approve" {
+  check {
+    condition = context.plan.deployment == deployment.dev
+    reason    = "Automatically applying dev deployment for application services."
+  }
+}
+
+deployment_auto_approve "small_app_changes" {
+  check {
+    condition = context.plan.changes.total <= 5
+    reason    = "Auto-approve small application changes."
+  }
+}
+
+# -----------------------------------------------------------------------------
 # 배포 그룹 정의 - 기본 스택 완료 후 배포
 # -----------------------------------------------------------------------------
 deployment_group "app_development" {
-  deployment "dev" {}
+  auto_approve_checks = [
+    deployment_auto_approve.dev_auto_approve,
+    deployment_auto_approve.small_app_changes
+  ]
 }
 
 deployment_group "app_staging" {
-  deployment "stg" {}
-  depends_on = [deployment_group.app_development]
+  auto_approve_checks = []  # 수동 승인
 }
 
 deployment_group "app_production" {
-  deployment "prd" {}
-  depends_on = [deployment_group.app_staging]
+  auto_approve_checks = []  # 수동 승인
 }
 
 # -----------------------------------------------------------------------------
@@ -82,6 +100,8 @@ deployment "dev" {
     cost_center  = store.varset.common_tags.cost_center
     name_prefix  = store.varset.common_tags.name_prefix
   }
+  
+  deployment_group = deployment_group.app_development
 }
 
 # 스테이징 환경 배포
@@ -92,12 +112,12 @@ deployment "stg" {
     enable_backup = true
     
     # 기본 스택에서 전달받는 네트워크 리소스
-    vpc_id                    = upstream.core_infrastructure.vpc_outputs.vpc_id
-    public_subnet_ids         = upstream.core_infrastructure.vpc_outputs.public_subnet_ids
-    private_subnet_ids        = upstream.core_infrastructure.vpc_outputs.private_subnet_ids
-    web_security_group_id     = upstream.core_infrastructure.vpc_outputs.web_security_group_id
-    db_security_group_id      = upstream.core_infrastructure.vpc_outputs.db_security_group_id
-    ec2_instance_profile_arn  = upstream.core_infrastructure.vpc_outputs.ec2_instance_profile_arn
+    vpc_id                    = upstream.core_infrastructure.stg_vpc_outputs.vpc_id
+    public_subnet_ids         = upstream.core_infrastructure.stg_vpc_outputs.public_subnet_ids
+    private_subnet_ids        = upstream.core_infrastructure.stg_vpc_outputs.private_subnet_ids
+    web_security_group_id     = upstream.core_infrastructure.stg_vpc_outputs.web_security_group_id
+    db_security_group_id      = upstream.core_infrastructure.stg_vpc_outputs.db_security_group_id
+    ec2_instance_profile_arn  = upstream.core_infrastructure.stg_vpc_outputs.ec2_instance_profile_arn
     
     # 애플리케이션 설정 (Variable Sets에서 관리)
     instance_type     = store.varset.app_config.stg_instance_type
@@ -113,6 +133,8 @@ deployment "stg" {
     cost_center  = store.varset.common_tags.cost_center
     name_prefix  = store.varset.common_tags.name_prefix
   }
+  
+  deployment_group = deployment_group.app_staging
 }
 
 # 프로덕션 환경 배포
@@ -123,12 +145,12 @@ deployment "prd" {
     enable_backup = true
     
     # 기본 스택에서 전달받는 네트워크 리소스
-    vpc_id                    = upstream.core_infrastructure.vpc_outputs.vpc_id
-    public_subnet_ids         = upstream.core_infrastructure.vpc_outputs.public_subnet_ids
-    private_subnet_ids        = upstream.core_infrastructure.vpc_outputs.private_subnet_ids
-    web_security_group_id     = upstream.core_infrastructure.vpc_outputs.web_security_group_id
-    db_security_group_id      = upstream.core_infrastructure.vpc_outputs.db_security_group_id
-    ec2_instance_profile_arn  = upstream.core_infrastructure.vpc_outputs.ec2_instance_profile_arn
+    vpc_id                    = upstream.core_infrastructure.prd_vpc_outputs.vpc_id
+    public_subnet_ids         = upstream.core_infrastructure.prd_vpc_outputs.public_subnet_ids
+    private_subnet_ids        = upstream.core_infrastructure.prd_vpc_outputs.private_subnet_ids
+    web_security_group_id     = upstream.core_infrastructure.prd_vpc_outputs.web_security_group_id
+    db_security_group_id      = upstream.core_infrastructure.prd_vpc_outputs.db_security_group_id
+    ec2_instance_profile_arn  = upstream.core_infrastructure.prd_vpc_outputs.ec2_instance_profile_arn
     
     # 애플리케이션 설정 (Variable Sets에서 관리)
     instance_type     = store.varset.app_config.prd_instance_type
@@ -144,18 +166,6 @@ deployment "prd" {
     cost_center  = store.varset.common_tags.cost_center
     name_prefix  = store.varset.common_tags.name_prefix
   }
-}
-
-# -----------------------------------------------------------------------------
-# 자동 승인 정책
-# -----------------------------------------------------------------------------
-deployment_auto_approve "app_dev_auto_approve" {
-  deployment = deployment.dev
   
-  check "max_changes" {
-    condition = plan.changes.total <= 5
-    reason    = "Application dev environment - auto approved for small changes"
-  }
+  deployment_group = deployment_group.app_production
 }
-
-# stg, prd 환경은 수동 승인 (기본값)
