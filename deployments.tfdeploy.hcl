@@ -19,7 +19,8 @@ store "varset" "database_config" {
 # 기본 스택 출력 참조 - upstream_input 블록 (공식 문법)
 # -----------------------------------------------------------------------------
 upstream_input "core_infrastructure" {
-  stack = "core-infrastructure"
+  type   = "stack"
+  source = "app.terraform.io/rum-org-korean-air/Stacks_GA/terraform-stacks-core"
 }
 
 # -----------------------------------------------------------------------------
