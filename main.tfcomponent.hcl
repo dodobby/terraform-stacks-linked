@@ -10,6 +10,10 @@ required_providers {
     source  = "hashicorp/aws"
     version = "~> 5.70"
   }
+  random = {
+    source  = "hashicorp/random"
+    version = "~> 3.6"
+  }
 }
 
 # -----------------------------------------------------------------------------
@@ -17,7 +21,9 @@ required_providers {
 # -----------------------------------------------------------------------------
 provider "aws" "default" {
   config {
-    region = var.aws_region
+    access_key = var.aws_access_key_id
+    secret_key = var.aws_secret_access_key
+    region     = var.aws_region
     default_tags {
       tags = {
         Environment = var.environment
@@ -30,6 +36,9 @@ provider "aws" "default" {
       }
     }
   }
+}
+
+provider "random" "default" {
 }
 
 # -----------------------------------------------------------------------------
@@ -65,6 +74,23 @@ variable "aws_region" {
   type        = string
   description = "AWS region"
   default     = "ap-northeast-2"
+}
+
+# -----------------------------------------------------------------------------
+# AWS 자격증명 변수 (ephemeral 사용)
+# -----------------------------------------------------------------------------
+variable "aws_access_key_id" {
+  type        = string
+  description = "AWS access key ID"
+  sensitive   = true
+  ephemeral   = true
+}
+
+variable "aws_secret_access_key" {
+  type        = string
+  description = "AWS secret access key"
+  sensitive   = true
+  ephemeral   = true
 }
 
 # -----------------------------------------------------------------------------
@@ -240,7 +266,8 @@ component "applications" {
   source = "./components/applications"
   
   providers = {
-    aws = provider.aws.default
+    aws    = provider.aws.default
+    random = provider.random.default
   }
   
   inputs = {
