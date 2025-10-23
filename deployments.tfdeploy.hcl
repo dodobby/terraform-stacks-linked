@@ -10,7 +10,7 @@ store "varset" "aws_credentials" {
   category = "env"
 }
 
-store "varset" "database_config" {
+store "varset" "database-config" {
   id       = "varset-XqfL9jtRm2c16bMQ"
   category = "env"
 }
@@ -94,9 +94,9 @@ deployment "dev" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 관리 - ephemeral)
-    db_username  = store.varset.database_config.db_username
-    db_password  = store.varset.database_config.db_password
+    # 민감한 정보 (Variable Sets에서 관리 - non-ephemeral)
+    db_username  = store.varset.database-config.db_username
+    db_password  = store.varset.database-config.db_password
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
@@ -138,9 +138,9 @@ deployment "stg" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 관리 - ephemeral)
-    db_username  = store.varset.database_config.db_username
-    db_password  = store.varset.database_config.db_password
+    # 민감한 정보 (Variable Sets에서 관리 - non-ephemeral)
+    db_username  = store.varset.database-config.db_username
+    db_password  = store.varset.database-config.db_password
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
@@ -182,9 +182,9 @@ deployment "prd" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 관리 - ephemeral)
-    db_username  = store.varset.database_config.db_username
-    db_password  = store.varset.database_config.db_password
+    # 민감한 정보 (Variable Sets에서 관리 - non-ephemeral)
+    db_username  = store.varset.database-config.db_username
+    db_password  = store.varset.database-config.db_password
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
