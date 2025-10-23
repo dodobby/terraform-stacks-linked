@@ -100,14 +100,12 @@ variable "db_username" {
   type        = string
   description = "Database master username"
   sensitive   = true
-  ephemeral   = true
 }
 
 variable "db_password" {
   type        = string
   description = "Database master password"
   sensitive   = true
-  ephemeral   = true
 }
 
 # -----------------------------------------------------------------------------
