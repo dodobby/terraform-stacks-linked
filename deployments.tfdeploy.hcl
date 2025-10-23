@@ -10,6 +10,8 @@ store "varset" "aws_credentials" {
   category = "env"
 }
 
+
+
 # database-config Variable Set은 더 이상 필요하지 않음
 # DB 자격증명은 AWS Secrets Manager에서 자동 관리됨
 
