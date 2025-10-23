@@ -34,39 +34,33 @@ provider "aws" "default" {
 variable "environment" {
   type        = string
   description = "Environment name (dev, stg, prd)"
-  ephemeral   = true
 }
 
 variable "instance_type" {
   type        = string
   description = "EC2 instance type"
-  ephemeral   = true
 }
 
 variable "db_instance_class" {
   type        = string
   description = "RDS instance class"
-  ephemeral   = true
 }
 
 variable "enable_backup" {
   type        = bool
   description = "Enable RDS backup"
-  ephemeral   = true
 }
 
 variable "name_prefix" {
   type        = string
   description = "Prefix for resource names"
   default     = "hjdo"
-  ephemeral   = true
 }
 
 variable "aws_region" {
   type        = string
   description = "AWS region"
   default     = "ap-northeast-2"
-  ephemeral   = true
 }
 
 # -----------------------------------------------------------------------------
@@ -92,25 +86,21 @@ variable "db_password" {
 variable "project_name" {
   type        = string
   description = "Project name"
-  ephemeral   = true
 }
 
 variable "owner" {
   type        = string
   description = "Owner of the resources"
-  ephemeral   = true
 }
 
 variable "createdBy" {
   type        = string
   description = "Creator of the resources"
-  ephemeral   = true
 }
 
 variable "cost_center" {
   type        = string
   description = "Cost center"
-  ephemeral   = true
 }
 
 # -----------------------------------------------------------------------------
@@ -119,37 +109,31 @@ variable "cost_center" {
 variable "vpc_id" {
   type        = string
   description = "VPC ID from core stack"
-  ephemeral   = true
 }
 
 variable "public_subnet_ids" {
   type        = list(string)
   description = "Public subnet IDs from core stack"
-  ephemeral   = true
 }
 
 variable "private_subnet_ids" {
   type        = list(string)
   description = "Private subnet IDs from core stack"
-  ephemeral   = true
 }
 
 variable "web_security_group_id" {
   type        = string
   description = "Web security group ID from core stack"
-  ephemeral   = true
 }
 
 variable "db_security_group_id" {
   type        = string
   description = "Database security group ID from core stack"
-  ephemeral   = true
 }
 
 variable "ec2_instance_profile_arn" {
   type        = string
   description = "EC2 instance profile ARN from core stack"
-  ephemeral   = true
 }
 
 # -----------------------------------------------------------------------------
