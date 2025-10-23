@@ -123,7 +123,7 @@ variable "ec2_instance_profile_arn" {
 # -----------------------------------------------------------------------------
 locals {
   # YAML 파일에서 애플리케이션 설정 읽기 시도
-  app_config = try(yamldecode(file("${path.root}/config/application-config.yaml")), {
+  app_config = try(yamldecode(file("config/application-config.yaml")), {
     dev = { 
       backup_retention_days = 7,
       monitoring_enabled = false,
@@ -157,7 +157,7 @@ locals {
   })
   
   # 테스트 결과 확인용
-  yaml_load_success = can(yamldecode(file("${path.root}/config/application-config.yaml")))
+  yaml_load_success = can(yamldecode(file("config/application-config.yaml")))
   locals_block_success = true
   
   # 실제 사용할 값들 (YAML 우선, 실패 시 기본값 사용)
