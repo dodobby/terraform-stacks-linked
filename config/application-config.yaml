@@ -1,0 +1,19 @@
+# 테스트용: 부가적인 설정만 YAML로 관리 (핵심 설정은 하드코딩)
+dev:
+  backup_retention_days: 7
+  monitoring_enabled: false
+  log_level: "DEBUG"
+  multi_az: false
+  performance_insights_enabled: false
+stg:
+  backup_retention_days: 14
+  monitoring_enabled: true
+  log_level: "INFO"
+  multi_az: true
+  performance_insights_enabled: true
+prd:
+  backup_retention_days: 30
+  monitoring_enabled: true
+  log_level: "WARN"
+  multi_az: true
+  performance_insights_enabled: true
