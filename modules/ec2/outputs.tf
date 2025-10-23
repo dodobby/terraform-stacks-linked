@@ -1,6 +1,6 @@
 output "web_server_ids" {
   description = "Web server instance IDs (from ASG)"
-  value       = aws_autoscaling_group.web.id
+  value       = [aws_autoscaling_group.web.id]  # 리스트로 변환
 }
 
 output "web_server_private_ips" {
