@@ -16,11 +16,10 @@ store "varset" "database_config" {
 }
 
 # -----------------------------------------------------------------------------
-# 기본 스택 출력 참조 - stack_input 블록 (올바른 문법)
+# 기본 스택 출력 참조 - upstream_input 블록 (공식 문법)
 # -----------------------------------------------------------------------------
-stack_input "core_infrastructure" {
-  type   = "stack"
-  source = "core-infrastructure"
+upstream_input "core_infrastructure" {
+  stack = "core-infrastructure"
 }
 
 # -----------------------------------------------------------------------------
@@ -69,13 +68,13 @@ deployment "dev" {
     environment   = "dev"
     enable_backup = false
     
-    # 기본 스택에서 전달받는 네트워크 리소스
-    vpc_id                    = stack_input.core_infrastructure.vpc_outputs.vpc_id
-    public_subnet_ids         = stack_input.core_infrastructure.vpc_outputs.public_subnet_ids
-    private_subnet_ids        = stack_input.core_infrastructure.vpc_outputs.private_subnet_ids
-    web_security_group_id     = stack_input.core_infrastructure.vpc_outputs.web_security_group_id
-    db_security_group_id      = stack_input.core_infrastructure.vpc_outputs.db_security_group_id
-    ec2_instance_profile_arn  = stack_input.core_infrastructure.vpc_outputs.ec2_instance_profile_arn
+    # 기본 스택에서 전달받는 네트워크 리소스 (upstream 사용)
+    vpc_id                    = upstream.core_infrastructure.vpc_outputs.vpc_id
+    public_subnet_ids         = upstream.core_infrastructure.vpc_outputs.public_subnet_ids
+    private_subnet_ids        = upstream.core_infrastructure.vpc_outputs.private_subnet_ids
+    web_security_group_id     = upstream.core_infrastructure.vpc_outputs.web_security_group_id
+    db_security_group_id      = upstream.core_infrastructure.vpc_outputs.db_security_group_id
+    ec2_instance_profile_arn  = upstream.core_infrastructure.vpc_outputs.ec2_instance_profile_arn
     
     # 애플리케이션 설정 (하드코딩된 값 - ephemeral 아님)
     instance_type     = "t3.micro"
@@ -113,13 +112,13 @@ deployment "stg" {
     environment   = "stg"
     enable_backup = true
     
-    # 기본 스택에서 전달받는 네트워크 리소스
-    vpc_id                    = stack_input.core_infrastructure.stg_vpc_outputs.vpc_id
-    public_subnet_ids         = stack_input.core_infrastructure.stg_vpc_outputs.public_subnet_ids
-    private_subnet_ids        = stack_input.core_infrastructure.stg_vpc_outputs.private_subnet_ids
-    web_security_group_id     = stack_input.core_infrastructure.stg_vpc_outputs.web_security_group_id
-    db_security_group_id      = stack_input.core_infrastructure.stg_vpc_outputs.db_security_group_id
-    ec2_instance_profile_arn  = stack_input.core_infrastructure.stg_vpc_outputs.ec2_instance_profile_arn
+    # 기본 스택에서 전달받는 네트워크 리소스 (upstream 사용)
+    vpc_id                    = upstream.core_infrastructure.stg_vpc_outputs.vpc_id
+    public_subnet_ids         = upstream.core_infrastructure.stg_vpc_outputs.public_subnet_ids
+    private_subnet_ids        = upstream.core_infrastructure.stg_vpc_outputs.private_subnet_ids
+    web_security_group_id     = upstream.core_infrastructure.stg_vpc_outputs.web_security_group_id
+    db_security_group_id      = upstream.core_infrastructure.stg_vpc_outputs.db_security_group_id
+    ec2_instance_profile_arn  = upstream.core_infrastructure.stg_vpc_outputs.ec2_instance_profile_arn
     
     # 애플리케이션 설정 (하드코딩된 값 - ephemeral 아님)
     instance_type     = "t3.small"
@@ -157,13 +156,13 @@ deployment "prd" {
     environment   = "prd"
     enable_backup = true
     
-    # 기본 스택에서 전달받는 네트워크 리소스
-    vpc_id                    = stack_input.core_infrastructure.prd_vpc_outputs.vpc_id
-    public_subnet_ids         = stack_input.core_infrastructure.prd_vpc_outputs.public_subnet_ids
-    private_subnet_ids        = stack_input.core_infrastructure.prd_vpc_outputs.private_subnet_ids
-    web_security_group_id     = stack_input.core_infrastructure.prd_vpc_outputs.web_security_group_id
-    db_security_group_id      = stack_input.core_infrastructure.prd_vpc_outputs.db_security_group_id
-    ec2_instance_profile_arn  = stack_input.core_infrastructure.prd_vpc_outputs.ec2_instance_profile_arn
+    # 기본 스택에서 전달받는 네트워크 리소스 (upstream 사용)
+    vpc_id                    = upstream.core_infrastructure.prd_vpc_outputs.vpc_id
+    public_subnet_ids         = upstream.core_infrastructure.prd_vpc_outputs.public_subnet_ids
+    private_subnet_ids        = upstream.core_infrastructure.prd_vpc_outputs.private_subnet_ids
+    web_security_group_id     = upstream.core_infrastructure.prd_vpc_outputs.web_security_group_id
+    db_security_group_id      = upstream.core_infrastructure.prd_vpc_outputs.db_security_group_id
+    ec2_instance_profile_arn  = upstream.core_infrastructure.prd_vpc_outputs.ec2_instance_profile_arn
     
     # 애플리케이션 설정 (하드코딩된 값 - ephemeral 아님)
     instance_type     = "t3.medium"
