@@ -21,7 +21,11 @@ provider "aws" "default" {
     default_tags {
       tags = {
         Environment = var.environment
-        ManagedBy   = "terraform-stacks"
+        Project     = var.project_name
+        Owner       = var.owner
+        CreatedBy   = var.createdBy
+        CostCenter  = var.cost_center
+        ManagedBy   = var.managed_by
         Stack       = "application-services"
       }
     }
@@ -39,13 +43,11 @@ variable "environment" {
 variable "instance_type" {
   type        = string
   description = "EC2 instance type"
-  ephemeral   = true
 }
 
 variable "db_instance_class" {
   type        = string
   description = "RDS instance class"
-  ephemeral   = true
 }
 
 variable "enable_backup" {
@@ -57,14 +59,12 @@ variable "name_prefix" {
   type        = string
   description = "Prefix for resource names"
   default     = "hjdo"
-  ephemeral   = true
 }
 
 variable "aws_region" {
   type        = string
   description = "AWS region"
   default     = "ap-northeast-2"
-  ephemeral   = true
 }
 
 # -----------------------------------------------------------------------------
@@ -90,25 +90,45 @@ variable "db_password" {
 variable "project_name" {
   type        = string
   description = "Project name"
-  ephemeral   = true
 }
 
 variable "owner" {
   type        = string
   description = "Owner of the resources"
-  ephemeral   = true
 }
 
 variable "createdBy" {
   type        = string
   description = "Creator of the resources"
-  ephemeral   = true
 }
 
 variable "cost_center" {
   type        = string
   description = "Cost center"
+}
+
+variable "managed_by" {
+  type        = string
+  description = "Managed by"
+}
+
+# -----------------------------------------------------------------------------
+# 민감한 정보 변수 (ephemeral 사용)
+# -----------------------------------------------------------------------------
+variable "temp_access_token" {
+  type        = string
+  description = "Temporary access token for deployment"
+  sensitive   = true
   ephemeral   = true
+  default     = ""
+}
+
+variable "deployment_key" {
+  type        = string
+  description = "Temporary deployment key"
+  sensitive   = true
+  ephemeral   = true
+  default     = ""
 }
 
 # -----------------------------------------------------------------------------
@@ -193,6 +213,14 @@ locals {
   final_multi_az = try(local.current_config.multi_az, false)
   final_performance_insights_enabled = try(local.current_config.performance_insights_enabled, false)
   
+  # 민감한 정보만 ephemeral 처리
+  final_db_username = var.db_username
+  final_db_password = var.db_password
+  
+  # 임시 민감한 값들 (실제 사용 시에만 활성화)
+  final_temp_access_token = var.temp_access_token != "" ? var.temp_access_token : null
+  final_deployment_key = var.deployment_key != "" ? var.deployment_key : null
+  
   # 공통 태그
   common_tags = {
     Environment = var.environment
@@ -200,7 +228,7 @@ locals {
     Owner       = var.owner
     CreatedBy   = var.createdBy
     CostCenter  = var.cost_center
-    ManagedBy   = "terraform-stacks"
+    ManagedBy   = var.managed_by
     Stack       = "application-services"
   }
 }
@@ -241,8 +269,8 @@ component "applications" {
     performance_insights_enabled = local.final_performance_insights_enabled
     
     # 데이터베이스 인증
-    db_username              = var.db_username
-    db_password              = var.db_password
+    db_username              = local.final_db_username
+    db_password              = local.final_db_password
     
     # 공통 태그
     common_tags              = local.common_tags

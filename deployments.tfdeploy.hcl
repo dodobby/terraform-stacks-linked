@@ -3,26 +3,16 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Variable Sets 참조 - AWS 인증은 Variable Sets를 통해 관리
+# Variable Sets 참조 - 민감한 정보만 Variable Sets 사용
 # -----------------------------------------------------------------------------
 store "varset" "aws_credentials" {
   id       = "varset-VqTt9ubP3LPSFKeS"
-  category = "terraform"
+  category = "env"
 }
 
 store "varset" "database_config" {
   id       = "varset-XqfL9jtRm2c16bMQ"
   category = "env"
-}
-
-store "varset" "common_tags" {
-  id       = "varset-vMFB9eJBNwQpDhBo"
-  category = "terraform"
-}
-
-store "varset" "app_config" {
-  id       = "varset-x7Y9VwYPTrruyQn1"
-  category = "terraform"
 }
 
 # -----------------------------------------------------------------------------
@@ -86,19 +76,26 @@ deployment "dev" {
     db_security_group_id      = upstream.core_infrastructure.vpc_outputs.db_security_group_id
     ec2_instance_profile_arn  = upstream.core_infrastructure.vpc_outputs.ec2_instance_profile_arn
     
-    # 애플리케이션 설정 (Variable Sets에서 관리)
-    instance_type     = store.varset.app_config.dev_instance_type
-    db_instance_class = store.varset.app_config.dev_db_instance_class
+    # 애플리케이션 설정 (하드코딩된 값 - ephemeral 아님)
+    instance_type     = "t3.micro"
+    db_instance_class = "db.t3.micro"
     
-    # 공통 설정 (Variable Sets에서 관리)
-    aws_region   = store.varset.aws_credentials.aws_region
+    # 공통 설정 (하드코딩된 값 - ephemeral 아님)
+    aws_region    = "ap-northeast-2"
+    project_name  = "terraform-stacks-demo"
+    owner         = "devops-team"
+    createdBy     = "hj.do"
+    cost_center   = "engineering"
+    managed_by    = "terraform-stacks"
+    name_prefix   = "hjdo"
+    
+    # 민감한 정보 (Variable Sets에서 관리 - ephemeral)
     db_username  = store.varset.database_config.db_username
     db_password  = store.varset.database_config.db_password
-    project_name = store.varset.common_tags.project_name
-    owner        = store.varset.common_tags.owner
-    createdBy    = store.varset.common_tags.createdBy
-    cost_center  = store.varset.common_tags.cost_center
-    name_prefix  = store.varset.common_tags.name_prefix
+    
+    # 임시 민감한 값들 (필요 시에만 사용)
+    temp_access_token = ""  # 기본값: 빈 문자열
+    deployment_key    = ""  # 기본값: 빈 문자열
   }
   
   deployment_group = deployment_group.app_development
@@ -119,19 +116,26 @@ deployment "stg" {
     db_security_group_id      = upstream.core_infrastructure.stg_vpc_outputs.db_security_group_id
     ec2_instance_profile_arn  = upstream.core_infrastructure.stg_vpc_outputs.ec2_instance_profile_arn
     
-    # 애플리케이션 설정 (Variable Sets에서 관리)
-    instance_type     = store.varset.app_config.stg_instance_type
-    db_instance_class = store.varset.app_config.stg_db_instance_class
+    # 애플리케이션 설정 (하드코딩된 값 - ephemeral 아님)
+    instance_type     = "t3.small"
+    db_instance_class = "db.t3.small"
     
-    # 공통 설정 (Variable Sets에서 관리)
-    aws_region   = store.varset.aws_credentials.aws_region
+    # 공통 설정 (하드코딩된 값 - ephemeral 아님)
+    aws_region    = "ap-northeast-2"
+    project_name  = "terraform-stacks-demo"
+    owner         = "devops-team"
+    createdBy     = "hj.do"
+    cost_center   = "engineering"
+    managed_by    = "terraform-stacks"
+    name_prefix   = "hjdo"
+    
+    # 민감한 정보 (Variable Sets에서 관리 - ephemeral)
     db_username  = store.varset.database_config.db_username
     db_password  = store.varset.database_config.db_password
-    project_name = store.varset.common_tags.project_name
-    owner        = store.varset.common_tags.owner
-    createdBy    = store.varset.common_tags.createdBy
-    cost_center  = store.varset.common_tags.cost_center
-    name_prefix  = store.varset.common_tags.name_prefix
+    
+    # 임시 민감한 값들 (필요 시에만 사용)
+    temp_access_token = ""  # 기본값: 빈 문자열
+    deployment_key    = ""  # 기본값: 빈 문자열
   }
   
   deployment_group = deployment_group.app_staging
@@ -152,19 +156,26 @@ deployment "prd" {
     db_security_group_id      = upstream.core_infrastructure.prd_vpc_outputs.db_security_group_id
     ec2_instance_profile_arn  = upstream.core_infrastructure.prd_vpc_outputs.ec2_instance_profile_arn
     
-    # 애플리케이션 설정 (Variable Sets에서 관리)
-    instance_type     = store.varset.app_config.prd_instance_type
-    db_instance_class = store.varset.app_config.prd_db_instance_class
+    # 애플리케이션 설정 (하드코딩된 값 - ephemeral 아님)
+    instance_type     = "t3.medium"
+    db_instance_class = "db.t3.medium"
     
-    # 공통 설정 (Variable Sets에서 관리)
-    aws_region   = store.varset.aws_credentials.aws_region
+    # 공통 설정 (하드코딩된 값 - ephemeral 아님)
+    aws_region    = "ap-northeast-2"
+    project_name  = "terraform-stacks-demo"
+    owner         = "devops-team"
+    createdBy     = "hj.do"
+    cost_center   = "engineering"
+    managed_by    = "terraform-stacks"
+    name_prefix   = "hjdo"
+    
+    # 민감한 정보 (Variable Sets에서 관리 - ephemeral)
     db_username  = store.varset.database_config.db_username
     db_password  = store.varset.database_config.db_password
-    project_name = store.varset.common_tags.project_name
-    owner        = store.varset.common_tags.owner
-    createdBy    = store.varset.common_tags.createdBy
-    cost_center  = store.varset.common_tags.cost_center
-    name_prefix  = store.varset.common_tags.name_prefix
+    
+    # 임시 민감한 값들 (필요 시에만 사용)
+    temp_access_token = ""  # 기본값: 빈 문자열
+    deployment_key    = ""  # 기본값: 빈 문자열
   }
   
   deployment_group = deployment_group.app_production
