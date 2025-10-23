@@ -37,14 +37,14 @@ upstream_input "core_infrastructure" {
 # -----------------------------------------------------------------------------
 deployment_auto_approve "dev_auto_approve" {
   check {
-    condition = context.plan.deployment == deployment.dev
+    condition = context.plan != null && context.plan.deployment != null && context.plan.deployment == deployment.dev
     reason    = "Automatically applying dev deployment for application services."
   }
 }
 
 deployment_auto_approve "small_app_changes" {
   check {
-    condition = context.plan.changes.total <= 5
+    condition = context.plan != null && context.plan.changes != null && context.plan.changes.total <= 5
     reason    = "Auto-approve small application changes."
   }
 }
