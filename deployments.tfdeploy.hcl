@@ -94,9 +94,8 @@ deployment "dev" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 관리 - non-ephemeral)
-    db_username  = store.varset.database-config.db_username
-    db_password  = store.varset.database-config.db_password
+    # 민감한 정보 (TF_VAR_ 환경변수로 자동 매핑됨)
+    # TF_VAR_db_username과 TF_VAR_db_password가 Variable Sets에서 제공됨
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
@@ -138,9 +137,8 @@ deployment "stg" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 관리 - non-ephemeral)
-    db_username  = store.varset.database-config.db_username
-    db_password  = store.varset.database-config.db_password
+    # 민감한 정보 (TF_VAR_ 환경변수로 자동 매핑됨)
+    # TF_VAR_db_username과 TF_VAR_db_password가 Variable Sets에서 제공됨
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
@@ -182,9 +180,8 @@ deployment "prd" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 관리 - non-ephemeral)
-    db_username  = store.varset.database-config.db_username
-    db_password  = store.varset.database-config.db_password
+    # 민감한 정보 (TF_VAR_ 환경변수로 자동 매핑됨)
+    # TF_VAR_db_username과 TF_VAR_db_password가 Variable Sets에서 제공됨
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
