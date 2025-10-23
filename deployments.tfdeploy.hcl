@@ -36,20 +36,17 @@ upstream_input "core_infrastructure" {
 # 배포 그룹 정의 - 기본 스택 완료 후 배포
 # -----------------------------------------------------------------------------
 deployment_group "app_development" {
-  deployments = ["dev"]
-  # core-infrastructure 스택의 dev 환경 완료 후 실행
+  deployment "dev" {}
 }
 
 deployment_group "app_staging" {
-  deployments = ["stg"]
+  deployment "stg" {}
   depends_on = [deployment_group.app_development]
-  # core-infrastructure 스택의 stg 환경 완료 후 실행
 }
 
 deployment_group "app_production" {
-  deployments = ["prd"]
+  deployment "prd" {}
   depends_on = [deployment_group.app_staging]
-  # core-infrastructure 스택의 prd 환경 완료 후 실행
 }
 
 # -----------------------------------------------------------------------------
@@ -153,11 +150,11 @@ deployment "prd" {
 # 자동 승인 정책
 # -----------------------------------------------------------------------------
 deployment_auto_approve "app_dev_auto_approve" {
-  deployment = "dev"
+  deployment = deployment.dev
   
-  condition {
-    max_changes = 5
-    reason = "Application dev environment - auto approved for small changes"
+  check "max_changes" {
+    condition = plan.changes.total <= 5
+    reason    = "Application dev environment - auto approved for small changes"
   }
 }
 
