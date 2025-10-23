@@ -33,3 +33,15 @@ output "db_parameter_group_name" {
   description = "DB parameter group name"
   value       = aws_db_parameter_group.main.name
 }
+
+# Secrets Manager outputs (AWS 기본 KMS 키 사용)
+output "master_user_secret_arn" {
+  description = "ARN of the master user secret in AWS Secrets Manager"
+  value       = aws_db_instance.main.master_user_secret[0].secret_arn
+  sensitive   = true
+}
+
+output "master_user_secret_status" {
+  description = "Status of the master user secret in AWS Secrets Manager"
+  value       = aws_db_instance.main.master_user_secret[0].secret_status
+}

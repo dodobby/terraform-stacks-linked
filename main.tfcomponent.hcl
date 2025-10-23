@@ -94,19 +94,10 @@ variable "aws_secret_access_key" {
 }
 
 # -----------------------------------------------------------------------------
-# 입력 변수 정의 - 데이터베이스 인증
+# 데이터베이스 인증은 AWS Secrets Manager에서 자동 관리
 # -----------------------------------------------------------------------------
-variable "db_username" {
-  type        = string
-  description = "Database master username"
-  sensitive   = true
-}
-
-variable "db_password" {
-  type        = string
-  description = "Database master password"
-  sensitive   = true
-}
+# db_username = "admin" (RDS 모듈에서 하드코딩)
+# db_password = AWS Secrets Manager가 자동 생성 및 관리
 
 # -----------------------------------------------------------------------------
 # 입력 변수 정의 - 공통 설정
@@ -237,9 +228,7 @@ locals {
   final_multi_az = try(local.current_config.multi_az, false)
   final_performance_insights_enabled = try(local.current_config.performance_insights_enabled, false)
   
-  # 민감한 정보만 ephemeral 처리
-  final_db_username = var.db_username
-  final_db_password = var.db_password
+  # DB 자격증명은 AWS Secrets Manager에서 관리됨
   
   # 임시 민감한 값들 (실제 사용 시에만 활성화)
   final_temp_access_token = var.temp_access_token != "" ? var.temp_access_token : null
@@ -293,9 +282,7 @@ component "applications" {
     multi_az                 = local.final_multi_az
     performance_insights_enabled = local.final_performance_insights_enabled
     
-    # 데이터베이스 인증
-    db_username              = local.final_db_username
-    db_password              = local.final_db_password
+    # 데이터베이스 인증은 AWS Secrets Manager에서 자동 관리됨
     
     # 공통 태그
     common_tags              = local.common_tags
@@ -364,6 +351,22 @@ output "s3_bucket_arn" {
   description = "S3 bucket ARN"
   type        = string
   value       = component.applications.s3_bucket_arn
+}
+
+# -----------------------------------------------------------------------------
+# 출력 값 정의 - Secrets Manager (AWS 기본 KMS 키 사용)
+# -----------------------------------------------------------------------------
+output "master_user_secret_arn" {
+  description = "ARN of the master user secret in AWS Secrets Manager"
+  type        = string
+  value       = component.applications.master_user_secret_arn
+  sensitive   = true
+}
+
+output "master_user_secret_status" {
+  description = "Status of the master user secret in AWS Secrets Manager"
+  type        = string
+  value       = component.applications.master_user_secret_status
 }
 
 # -----------------------------------------------------------------------------

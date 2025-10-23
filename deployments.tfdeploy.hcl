@@ -10,10 +10,8 @@ store "varset" "aws_credentials" {
   category = "env"
 }
 
-store "varset" "database-config" {
-  id       = "varset-XqfL9jtRm2c16bMQ"
-  category = "env"
-}
+# database-config Variable Set은 더 이상 필요하지 않음
+# DB 자격증명은 AWS Secrets Manager에서 자동 관리됨
 
 # -----------------------------------------------------------------------------
 # 기본 스택 출력 참조 - upstream_input 블록 (공식 문법)
@@ -94,9 +92,9 @@ deployment "dev" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 TF_VAR_ 환경변수로 제공)
-    db_username = store.varset.database-config.TF_VAR_db_username
-    db_password = store.varset.database-config.TF_VAR_db_password
+    # 데이터베이스 인증은 AWS Secrets Manager에서 자동 관리됨
+    # username: "admin" (하드코딩)
+    # password: AWS가 자동 생성 및 KMS로 암호화하여 Secrets Manager에 저장
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
@@ -138,9 +136,9 @@ deployment "stg" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 TF_VAR_ 환경변수로 제공)
-    db_username = store.varset.database-config.TF_VAR_db_username
-    db_password = store.varset.database-config.TF_VAR_db_password
+    # 데이터베이스 인증은 AWS Secrets Manager에서 자동 관리됨
+    # username: "admin" (하드코딩)
+    # password: AWS가 자동 생성 및 KMS로 암호화하여 Secrets Manager에 저장
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열
@@ -182,9 +180,9 @@ deployment "prd" {
     managed_by    = "terraform-stacks"
     name_prefix   = "hjdo"
     
-    # 민감한 정보 (Variable Sets에서 TF_VAR_ 환경변수로 제공)
-    db_username = store.varset.database-config.TF_VAR_db_username
-    db_password = store.varset.database-config.TF_VAR_db_password
+    # 데이터베이스 인증은 AWS Secrets Manager에서 자동 관리됨
+    # username: "admin" (하드코딩)
+    # password: AWS가 자동 생성 및 KMS로 암호화하여 Secrets Manager에 저장
     
     # 임시 민감한 값들 (필요 시에만 사용)
     temp_access_token = ""  # 기본값: 빈 문자열

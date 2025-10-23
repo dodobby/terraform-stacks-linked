@@ -30,7 +30,7 @@ resource "aws_db_parameter_group" "main" {
   })
 }
 
-# RDS Instance
+# RDS Instance with AWS Secrets Manager (AWS 기본 KMS 키 사용)
 resource "aws_db_instance" "main" {
   identifier = "${var.name_prefix}-app-db-${var.environment}"
 
@@ -41,8 +41,9 @@ resource "aws_db_instance" "main" {
 
   # Database settings
   db_name  = "appdb"
-  username = var.db_username
-  password = var.db_password
+  username = "admin"
+  manage_master_user_password = true
+  # master_user_secret_kms_key_id 생략 → AWS 기본 KMS 키 사용 (무료)
   port     = 3306
 
   # Storage settings

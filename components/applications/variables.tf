@@ -82,18 +82,9 @@ variable "performance_insights_enabled" {
   type        = bool
 }
 
-# 데이터베이스 인증
-variable "db_username" {
-  description = "Database master username"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_password" {
-  description = "Database master password"
-  type        = string
-  sensitive   = true
-}
+# 데이터베이스 인증은 AWS Secrets Manager에서 자동 관리됨
+# db_username = "admin" (하드코딩)
+# db_password = AWS가 자동 생성 및 관리
 
 # 공통 태그
 variable "common_tags" {

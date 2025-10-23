@@ -28,17 +28,9 @@ variable "db_instance_class" {
   type        = string
 }
 
-variable "db_username" {
-  description = "Database master username"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_password" {
-  description = "Database master password"
-  type        = string
-  sensitive   = true
-}
+# DB credentials are now managed by AWS Secrets Manager
+# Username is hardcoded to "admin"
+# Password is automatically generated and managed by AWS
 
 variable "enable_backup" {
   description = "Enable RDS backup"

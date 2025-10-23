@@ -46,3 +46,15 @@ output "s3_bucket_arn" {
   description = "S3 bucket ARN"
   value       = module.s3.s3_bucket_arn
 }
+
+# Secrets Manager 출력 (AWS 기본 KMS 키 사용)
+output "master_user_secret_arn" {
+  description = "ARN of the master user secret in AWS Secrets Manager"
+  value       = module.rds.master_user_secret_arn
+  sensitive   = true
+}
+
+output "master_user_secret_status" {
+  description = "Status of the master user secret in AWS Secrets Manager"
+  value       = module.rds.master_user_secret_status
+}

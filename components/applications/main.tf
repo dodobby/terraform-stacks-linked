@@ -10,8 +10,6 @@ locals {
   ec2_instance_profile_arn = var.ec2_instance_profile_arn
   instance_type            = var.instance_type
   db_instance_class        = var.db_instance_class
-  db_username              = var.db_username
-  db_password              = var.db_password
   enable_backup            = var.enable_backup
   backup_retention_days    = var.backup_retention_days
   monitoring_enabled       = var.monitoring_enabled
@@ -35,7 +33,7 @@ module "ec2" {
   tags                     = local.common_tags
 }
 
-# RDS 모듈
+# RDS 모듈 (AWS Secrets Manager 사용)
 module "rds" {
   source = "../../modules/rds"
 
@@ -45,8 +43,6 @@ module "rds" {
   private_subnet_ids           = local.private_subnet_ids
   db_security_group_id         = local.db_security_group_id
   db_instance_class            = local.db_instance_class
-  db_username                  = local.db_username
-  db_password                  = local.db_password
   enable_backup                = local.enable_backup
   backup_retention_days        = local.backup_retention_days
   monitoring_enabled           = local.monitoring_enabled
