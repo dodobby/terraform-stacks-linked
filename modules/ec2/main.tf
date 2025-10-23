@@ -14,7 +14,7 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# Application Load Balancer
+# Application Load Balancer (Multi-AZ)
 resource "aws_lb" "web" {
   name               = "${var.name_prefix}-app-alb-${var.environment}"
   internal           = false

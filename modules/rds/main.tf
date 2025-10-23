@@ -1,4 +1,4 @@
-# DB Subnet Group
+# DB Subnet Group (Multi-AZ)
 resource "aws_db_subnet_group" "main" {
   name       = "${var.name_prefix}-app-db-subnet-group-${var.environment}"
   subnet_ids = var.private_subnet_ids
