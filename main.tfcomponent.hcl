@@ -18,31 +18,16 @@ required_providers {
 variable "environment" {
   type        = string
   description = "Environment name (dev, stg, prd)"
-  
-  validation {
-    condition     = contains(["dev", "stg", "prd"], var.environment)
-    error_message = "Environment must be one of: dev, stg, prd."
-  }
 }
 
 variable "instance_type" {
   type        = string
   description = "EC2 instance type"
-  
-  validation {
-    condition     = can(regex("^[a-z][0-9][a-z]?\\.(nano|micro|small|medium|large|xlarge|[0-9]+xlarge)$", var.instance_type))
-    error_message = "Instance type must be a valid EC2 instance type."
-  }
 }
 
 variable "db_instance_class" {
   type        = string
   description = "RDS instance class"
-  
-  validation {
-    condition     = can(regex("^db\\.[a-z][0-9][a-z]?\\.(nano|micro|small|medium|large|xlarge|[0-9]+xlarge)$", var.db_instance_class))
-    error_message = "DB instance class must be a valid RDS instance class."
-  }
 }
 
 variable "enable_backup" {
@@ -69,22 +54,12 @@ variable "db_username" {
   type        = string
   description = "Database master username"
   sensitive   = true
-  
-  validation {
-    condition     = length(var.db_username) >= 1 && length(var.db_username) <= 32
-    error_message = "Database username must be between 1 and 32 characters."
-  }
 }
 
 variable "db_password" {
   type        = string
   description = "Database master password"
   sensitive   = true
-  
-  validation {
-    condition     = length(var.db_password) >= 8 && length(var.db_password) <= 128
-    error_message = "Database password must be between 8 and 128 characters."
-  }
 }
 
 # -----------------------------------------------------------------------------
@@ -248,61 +223,80 @@ component "applications" {
 # 출력 값 정의 - 애플리케이션 리소스
 # -----------------------------------------------------------------------------
 output "web_server_ids" {
-  value       = component.applications.web_server_ids
   description = "Web server instance IDs"
+  type        = list(string)
+  value       = component.applications.web_server_ids
 }
 
 output "web_server_private_ips" {
-  value       = component.applications.web_server_private_ips
   description = "Web server private IP addresses"
+  type        = list(string)
+  value       = component.applications.web_server_private_ips
 }
 
 output "load_balancer_dns" {
-  value       = component.applications.load_balancer_dns
   description = "Load balancer DNS name"
+  type        = string
+  value       = component.applications.load_balancer_dns
 }
 
 output "load_balancer_arn" {
-  value       = component.applications.load_balancer_arn
   description = "Load balancer ARN"
+  type        = string
+  value       = component.applications.load_balancer_arn
 }
 
 # -----------------------------------------------------------------------------
 # 출력 값 정의 - 데이터베이스
 # -----------------------------------------------------------------------------
 output "database_endpoint" {
-  value       = component.applications.database_endpoint
   description = "RDS database endpoint"
+  type        = string
+  value       = component.applications.database_endpoint
   sensitive   = true
 }
 
 output "database_port" {
-  value       = component.applications.database_port
   description = "RDS database port"
+  type        = number
+  value       = component.applications.database_port
 }
 
 output "database_name" {
-  value       = component.applications.database_name
   description = "RDS database name"
+  type        = string
+  value       = component.applications.database_name
 }
 
 # -----------------------------------------------------------------------------
 # 출력 값 정의 - 스토리지
 # -----------------------------------------------------------------------------
 output "s3_bucket_name" {
-  value       = component.applications.s3_bucket_name
   description = "S3 bucket name"
+  type        = string
+  value       = component.applications.s3_bucket_name
 }
 
 output "s3_bucket_arn" {
-  value       = component.applications.s3_bucket_arn
   description = "S3 bucket ARN"
+  type        = string
+  value       = component.applications.s3_bucket_arn
 }
 
 # -----------------------------------------------------------------------------
 # 테스트 결과 출력
 # -----------------------------------------------------------------------------
 output "test_results" {
+  description = "테스트 결과: locals 블록과 yamldecode 함수 지원 여부"
+  type = object({
+    locals_block_supported = bool
+    yaml_file_loaded = bool
+    backup_retention_days = number
+    monitoring_enabled = bool
+    log_level = string
+    multi_az = bool
+    performance_insights_enabled = bool
+  })
   value = {
     locals_block_supported = local.locals_block_success
     yaml_file_loaded = local.yaml_load_success
@@ -312,5 +306,4 @@ output "test_results" {
     multi_az = local.final_multi_az
     performance_insights_enabled = local.final_performance_insights_enabled
   }
-  description = "테스트 결과: locals 블록과 yamldecode 함수 지원 여부"
 }
