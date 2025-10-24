@@ -81,8 +81,8 @@ resource "aws_db_instance" "main" {
 
   # Deletion protection
   deletion_protection = false
-  skip_final_snapshot = var.environment == "dev" ? true : false
-  final_snapshot_identifier = var.environment != "dev" ? "${var.name_prefix}-app-db-final-snapshot-${var.environment}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}" : null
+  skip_final_snapshot = true
+  # final_snapshot_identifier = null  # 스냅샷 생성 안함
 
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-app-db-${var.environment}"
