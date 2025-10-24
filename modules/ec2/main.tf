@@ -22,7 +22,7 @@ resource "aws_lb" "web" {
   security_groups    = [var.web_security_group_id]
   subnets            = var.public_subnet_ids
 
-  enable_deletion_protection = var.environment == "prd" ? true : false
+  enable_deletion_protection = false
 
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-app-alb-${var.environment}"

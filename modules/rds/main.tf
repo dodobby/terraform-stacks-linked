@@ -79,7 +79,7 @@ resource "aws_db_instance" "main" {
   parameter_group_name = aws_db_parameter_group.main.name
 
   # Deletion protection
-  deletion_protection = var.environment == "prd" ? true : false
+  deletion_protection = false
   skip_final_snapshot = var.environment == "dev" ? true : false
   final_snapshot_identifier = var.environment != "dev" ? "${var.name_prefix}-app-db-final-snapshot-${var.environment}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}" : null
 
