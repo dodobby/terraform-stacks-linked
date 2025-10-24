@@ -36,7 +36,7 @@ resource "aws_db_instance" "main" {
 
   # Engine settings
   engine         = "mysql"
-  engine_version = "8.0.35"
+  engine_version = "8.0.39"
   instance_class = var.db_instance_class
 
   # Database settings
