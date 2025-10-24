@@ -67,13 +67,13 @@ resource "aws_db_instance" "main" {
   # High Availability
   multi_az = var.multi_az
 
-  # Monitoring
-  monitoring_interval = var.monitoring_enabled ? 60 : 0
-  monitoring_role_arn = var.monitoring_enabled ? "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.name_prefix}-core-role-rds-monitoring-${var.environment}" : null
+  # Monitoring (Enhanced Monitoring 비활성화)
+  monitoring_interval = 0
+  # monitoring_role_arn = null  # Enhanced Monitoring 사용 안함
 
-  # Performance Insights
-  performance_insights_enabled = var.performance_insights_enabled
-  performance_insights_retention_period = var.performance_insights_enabled ? 7 : null
+  # Performance Insights (비활성화)
+  performance_insights_enabled = false
+  # performance_insights_retention_period = null
 
   # Parameter and option groups
   parameter_group_name = aws_db_parameter_group.main.name
