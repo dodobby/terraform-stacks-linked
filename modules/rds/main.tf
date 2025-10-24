@@ -15,8 +15,9 @@ resource "aws_db_parameter_group" "main" {
   name   = "${var.name_prefix}-app-db-params-${var.environment}"
 
   parameter {
-    name  = "innodb_buffer_pool_size"
-    value = "{DBInstanceClassMemory*3/4}"
+    apply_method = "pending-reboot"
+    name         = "innodb_buffer_pool_size"
+    value        = "{DBInstanceClassMemory*3/4}"
   }
 
   parameter {
